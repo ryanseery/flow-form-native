@@ -20,15 +20,12 @@ interface IForm {
   loading?: boolean;
   error?: null | {};
   submitTitle?: string;
+  initialValues?: {};
 }
 
 const localStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  form: {
-    justifyContent: 'flex-end',
-  },
+  container: {},
+  form: {},
 });
 
 const FormComponent: React.FC<IForm> = ({
@@ -42,7 +39,7 @@ const FormComponent: React.FC<IForm> = ({
 }) => {
   const { data, clearForm } = React.useContext(FormContext);
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }} enabled>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} enabled>
       <SafeAreaView style={[localStyles.container, { ...style }]}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={localStyles.form}>
@@ -63,8 +60,16 @@ const FormComponent: React.FC<IForm> = ({
   );
 };
 
-export const Form: React.FC<IForm> = ({ children, onSubmit, style, reset, submitTitle, submitButtonStyle }) => (
-  <FormWrapper>
+export const Form: React.FC<IForm> = ({
+  children,
+  onSubmit,
+  style,
+  reset,
+  submitTitle,
+  submitButtonStyle,
+  initialValues,
+}) => (
+  <FormWrapper initialValues={initialValues}>
     <FormComponent
       onSubmit={onSubmit}
       style={style}

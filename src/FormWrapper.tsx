@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { toCamelCase } from './utils';
+
+export const type = (obj: any) => Object.prototype.toString.call(obj).slice(8, -1);
 
 export interface IState {
   data: {};
@@ -85,8 +88,8 @@ export interface FormWrapper {
   initialValues?: {};
 }
 
-export const FormWrapper: React.FC<FormWrapper> = ({ children }) => {
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+export const FormWrapper: React.FC<FormWrapper> = ({ children, initialValues }) => {
+  const [state, dispatch] = React.useReducer(reducer, { ...initialState, data: { ...initialValues } });
 
   const actions = React.useMemo(() => {
     return {
