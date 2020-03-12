@@ -39,8 +39,12 @@ const FormComponent: React.FC<IForm> = ({
 }) => {
   const { data, clearForm } = React.useContext(FormContext);
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} enabled>
-      <SafeAreaView style={[localStyles.container, { ...style }]}>
+    <KeyboardAvoidingView
+      style={[localStyles.container, { ...style }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      enabled
+    >
+      <SafeAreaView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={localStyles.form}>
             {children}
