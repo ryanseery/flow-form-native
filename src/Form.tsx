@@ -42,6 +42,7 @@ const FormComponent: React.FC<IForm> = ({
     <KeyboardAvoidingView
       style={[localStyles.container, { ...style }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
       enabled
     >
       <SafeAreaView>

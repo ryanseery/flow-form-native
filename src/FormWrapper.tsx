@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { toCamelCase } from './utils';
 
 export const type = (obj: any) => Object.prototype.toString.call(obj).slice(8, -1);
 
