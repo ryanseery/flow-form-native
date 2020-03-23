@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {Form, Input} from 'flow-form-native';
 
 const inputStyle = StyleSheet.create({

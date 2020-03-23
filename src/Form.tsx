@@ -1,13 +1,5 @@
 import * as React from 'react';
-import {
-  KeyboardAvoidingView,
-  View,
-  StyleSheet,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  SafeAreaView,
-} from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import { FormContext, FormWrapper } from './FormWrapper';
 import { Button, ButtonStyles } from './Button';
 
@@ -24,7 +16,6 @@ interface IForm {
 }
 
 const localStyles = StyleSheet.create({
-  container: {},
   form: {},
 });
 
@@ -39,29 +30,20 @@ const FormComponent: React.FC<IForm> = ({
 }) => {
   const { data, clearForm } = React.useContext(FormContext);
   return (
-    <KeyboardAvoidingView
-      style={[localStyles.container, { ...style }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
-      enabled
-    >
-      <SafeAreaView>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={localStyles.form}>
-            {children}
-            <View>
-              <Button
-                style={submitButtonStyle}
-                title={submitTitle ? submitTitle : `Submit`}
-                disabled={loading}
-                onPress={() => onSubmit(data)}
-              />
-              {reset && <Button title="Clear" disabled={loading} onPress={clearForm} />}
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+    <SafeAreaView style={style}>
+      <View style={localStyles.form}>
+        {children}
+        <View>
+          <Button
+            style={submitButtonStyle}
+            title={submitTitle ? submitTitle : `Submit`}
+            disabled={loading}
+            onPress={() => onSubmit(data)}
+          />
+          {reset && <Button title="Clear" disabled={loading} onPress={clearForm} />}
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 

@@ -12,22 +12,22 @@
   "author": "Ryan Seery",
   "license": "ISC",
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.1.1",
+    "@testing-library/react": "^9.5.0",
     "@types/react": "^16.9.23",
     "@types/react-native": "^0.61.20",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-prettier": "^3.1.2",
     "metro-react-native-babel-preset": "^0.58.0",
+    "prettier": "^1.19.1",
     "react": "^16.13.0",
     "react-native": "^0.61.5",
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@testing-library/jest-dom": "^5.1.1",
-    "@testing-library/react": "^9.5.0",
-    "@typescript-eslint/eslint-plugin": "^2.23.0",
-    "@typescript-eslint/parser": "^2.23.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "prettier": "^1.19.1",
     "react-dom": "^16.13.0"
   }
 }
