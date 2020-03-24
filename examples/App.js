@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Form, Input} from 'flow-form-native';
+import {FlowForm, Input} from 'flow-form-native';
 
 const inputStyle = StyleSheet.create({
   label: {
@@ -35,7 +35,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
-      <Form
+      <FlowForm
         onSubmit={data => console.log(data)}
         submitTitle="Login"
         initialValues={{emailAddress: 'Test', password: ''}}
@@ -50,7 +50,7 @@ const App = () => {
         <Input style={inputStyle} placeholder="Enter your password">
           Password
         </Input>
-      </Form>
+      </FlowForm>
     </View>
   );
 };

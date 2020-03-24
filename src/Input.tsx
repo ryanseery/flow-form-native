@@ -27,7 +27,6 @@ interface IInput {
 
 const localStyles = StyleSheet.create({
   container: {
-    display: 'flex',
     flexDirection: 'column',
     padding: 10,
     minHeight: 30,

@@ -1,12 +1,16 @@
 import * as React from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { FormContext, FormWrapper } from './FormWrapper';
 import { Button, ButtonStyles } from './Button';
+
+interface FormStyles {
+  container?: {};
+}
 
 interface IForm {
   children: React.ReactNode | React.ReactNode[];
   onSubmit: (data: object) => void;
-  style?: {};
+  style?: FormStyles;
   submitButtonStyle?: ButtonStyles;
   reset?: boolean;
   loading?: boolean;
@@ -30,24 +34,22 @@ const FormComponent: React.FC<IForm> = ({
 }) => {
   const { data, clearForm } = React.useContext(FormContext);
   return (
-    <SafeAreaView style={style}>
-      <View style={localStyles.form}>
-        {children}
-        <View>
-          <Button
-            style={submitButtonStyle}
-            title={submitTitle ? submitTitle : `Submit`}
-            disabled={loading}
-            onPress={() => onSubmit(data)}
-          />
-          {reset && <Button title="Clear" disabled={loading} onPress={clearForm} />}
-        </View>
+    <View style={[localStyles.form, { ...style?.container }]}>
+      {children}
+      <View>
+        <Button
+          style={submitButtonStyle}
+          title={submitTitle ? submitTitle : `Submit`}
+          disabled={loading}
+          onPress={() => onSubmit(data)}
+        />
+        {reset && <Button title="Clear" disabled={loading} onPress={clearForm} />}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
-export const Form: React.FC<IForm> = ({
+export const FlowForm: React.FC<IForm> = ({
   children,
   onSubmit,
   style,

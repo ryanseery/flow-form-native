@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "flow-form-native": "file:../flow-form-native-1.0.3.tgz",
+    "flow-form-native": "file:../flow-form-native-1.0.4.tgz",
     "react": "16.9.0",
     "react-native": "0.61.5"
   },
