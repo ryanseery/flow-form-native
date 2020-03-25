@@ -33,6 +33,12 @@ const FormComponent: React.FC<IForm> = ({
   submitButtonStyle,
 }) => {
   const { data, clearForm } = React.useContext(FormContext);
+
+  // TODO add more error catching
+  if (!children) {
+    throw new Error(`FlowForm expects to have children.`);
+  }
+
   return (
     <View style={[localStyles.form, { ...style?.container }]}>
       {children}
