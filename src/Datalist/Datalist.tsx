@@ -67,20 +67,14 @@ export function Datalist({
     throw new Error(`Datalist requires an array of values`);
   }
 
-  const _keyboardDidShow = () => {
-    dispatch(setExpanded(true));
-  };
-
   const _keyboardDidHide = () => {
     dispatch(setExpanded(false));
   };
 
   React.useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
     Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
 
     return () => {
-      Keyboard.removeListener('keyboardDidShow', _keyboardDidShow);
       Keyboard.removeListener('keyboardDidHide', _keyboardDidHide);
     };
   }, []);
@@ -96,6 +90,7 @@ export function Datalist({
         style={[localStyles.input, { ...style?.input }]}
         value={state.search}
         onChange={e => dispatch(setSearch(e.nativeEvent.text))}
+        onFocus={() => dispatch(setExpanded(true))}
       />
       {state.expanded && (
         <Picker
