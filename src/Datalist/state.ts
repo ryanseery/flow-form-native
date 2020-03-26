@@ -1,13 +1,18 @@
+import { Animated } from 'react-native';
+
 export interface State {
   search: string;
   expanded: boolean;
+  animation: Animated.AnimatedValue;
   maxHeight: number;
   minHeight: number;
 }
 
 enum ACTIONS {
   SET_SEARCH = 'SET_SEARCH',
-  SET_EXPANDED = 'SET_EXPANDED',
+  SET_MIN_HEIGHT = 'SET_MIN_HEIGHT',
+  SET_MAX_HEIGHT = 'SET_MAX_HEIGHT',
+  TOGGLE = 'TOGGLE',
 }
 
 interface SetSearch {
@@ -19,24 +24,53 @@ export const setSearch = (search: string): SetSearch => ({
   search,
 });
 
-interface SetExpanded {
-  type: ACTIONS.SET_EXPANDED;
-  expanded: boolean;
+interface SetMinHeight {
+  type: ACTIONS.SET_MIN_HEIGHT;
+  minHeight: number;
 }
-export const setExpanded = (expanded: boolean): SetExpanded => ({
-  type: ACTIONS.SET_EXPANDED,
-  expanded,
+export const setMinHeight = (minHeight: number): SetMinHeight => ({
+  type: ACTIONS.SET_MIN_HEIGHT,
+  minHeight,
 });
 
-type Action = SetSearch | SetExpanded;
+interface SetMaxHeight {
+  type: ACTIONS.SET_MAX_HEIGHT;
+  maxHeight: number;
+}
+export const setMaxHeight = (maxHeight: number): SetMaxHeight => ({
+  type: ACTIONS.SET_MAX_HEIGHT,
+  maxHeight,
+});
+
+interface Toggle {
+  type: ACTIONS.TOGGLE;
+}
+export const toggle = (): Toggle => ({
+  type: ACTIONS.TOGGLE,
+});
+
+type Action = SetSearch | SetMinHeight | Toggle | SetMaxHeight;
 
 export function reducer(state: State, action: Action): State {
-  console.log({ state, action });
   switch (action.type) {
     case ACTIONS.SET_SEARCH:
       return { ...state, search: action.search };
-    case ACTIONS.SET_EXPANDED:
-      return { ...state, expanded: action.expanded };
+    case ACTIONS.SET_MIN_HEIGHT:
+      return { ...state, minHeight: action.minHeight };
+    case ACTIONS.SET_MAX_HEIGHT:
+      return { ...state, maxHeight: action.maxHeight };
+    case ACTIONS.TOGGLE: {
+      let initialValue = state.expanded ? state.maxHeight + state.minHeight : state.minHeight;
+      let finalValue = state.expanded ? state.minHeight : state.maxHeight + state.minHeight;
+
+      state.animation.setValue(initialValue);
+
+      Animated.spring(state.animation, {
+        toValue: finalValue,
+      }).start();
+
+      return { ...state, expanded: !state.expanded };
+    }
     default:
       throw new Error(`Datalist Received Unrecognized Action.`);
   }

@@ -1,13 +1,38 @@
 import * as React from 'react';
-import { View, TextInput, StyleSheet, Picker, Text, Keyboard } from 'react-native';
-import { reducer, setSearch, setExpanded } from './state';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Picker,
+  Text,
+  Keyboard,
+  Animated,
+  ViewStyle,
+  TextStyle,
+  NativeSyntheticEvent,
+} from 'react-native';
+import { reducer, setSearch, setMinHeight, setMaxHeight, toggle } from './state';
 import { findMatches } from '../utils';
 
-const localStyles = StyleSheet.create({
+// const testData = [
+//   { label: 'Java', value: 'java' },
+//   { label: 'JavaScript', value: 'javascript' },
+//   { label: 'Swift', value: 'swift' },
+//   { label: 'C++', value: 'c++' },
+//   { label: 'Python', value: 'python' },
+//   { label: 'PHP', value: 'php' },
+// ];
+
+interface LocalStyles {
+  container: ViewStyle;
+  label: TextStyle;
+  input: TextStyle;
+  picker: ViewStyle;
+}
+
+const localStyles = StyleSheet.create<LocalStyles>({
   container: {
-    flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: 'grey',
+    overflow: 'hidden',
   },
   label: {
     fontSize: 16,
@@ -28,20 +53,33 @@ const localStyles = StyleSheet.create({
   },
 });
 
+export interface LayoutRectangle {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface LayoutChangeEvent {
+  layout: LayoutRectangle;
+}
+
 interface DatalistStyles {
-  container?: {};
-  label?: {};
-  input?: {};
-  picker?: {};
+  container?: ViewStyle;
+  label?: TextStyle;
+  input?: TextStyle;
+  picker?: ViewStyle;
 }
 
 type Data = { label: string; value: string };
 
+export type DataListReturnValue = Data;
+
 interface IDatalist {
   children: string;
   data: Data[];
-  selectedValue: string;
-  onValueChange: (value: string) => void;
+  selectedValue: null | Data;
+  onValueChange: (value: DataListReturnValue) => void;
   style?: DatalistStyles;
   placeholder?: string;
   placeholderTextColor?: string;
@@ -59,6 +97,7 @@ export function Datalist({
   const [state, dispatch] = React.useReducer(reducer, {
     search: '',
     expanded: false,
+    animation: new Animated.Value(65),
     maxHeight: 0,
     minHeight: 0,
   });
@@ -67,9 +106,7 @@ export function Datalist({
     throw new Error(`Datalist requires an array of values`);
   }
 
-  const _keyboardDidHide = () => {
-    dispatch(setExpanded(false));
-  };
+  const _keyboardDidHide = () => dispatch(toggle());
 
   React.useEffect(() => {
     Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
@@ -79,30 +116,45 @@ export function Datalist({
     };
   }, []);
 
+  const handleMinHeight = (e: NativeSyntheticEvent<LayoutChangeEvent>) => {
+    dispatch(setMinHeight(e.nativeEvent.layout.height));
+  };
+
+  const handleMaxHeight = (e: NativeSyntheticEvent<LayoutChangeEvent>) => {
+    dispatch(setMaxHeight(e.nativeEvent.layout.height));
+  };
+
   const filteredValues = findMatches(state.search, data, 'label');
 
   return (
-    <View style={{ ...style?.container }}>
-      <Text style={[localStyles.label, { ...style?.label }]}>{children ?? ''}</Text>
-      <TextInput
-        placeholder={placeholder}
-        placeholderTextColor={placeholderTextColor}
-        style={[localStyles.input, { ...style?.input }]}
-        value={state.search}
-        onChange={e => dispatch(setSearch(e.nativeEvent.text))}
-        onFocus={() => dispatch(setExpanded(true))}
-      />
-      {state.expanded && (
-        <Picker
-          style={[localStyles.picker, { ...style?.picker }]}
-          selectedValue={selectedValue}
-          onValueChange={onValueChange}
-        >
-          {filteredValues.map((item, index: number) => (
-            <Picker.Item key={index} label={item.label} value={item.value} />
-          ))}
-        </Picker>
-      )}
-    </View>
+    <Animated.View style={[localStyles.container, { ...style?.container }, { height: state.animation }]}>
+      <View onLayout={handleMinHeight}>
+        <Text style={[localStyles.label, { ...style?.label }]}>{children ?? ''}</Text>
+        <TextInput
+          placeholder={placeholder}
+          placeholderTextColor={placeholderTextColor}
+          style={[localStyles.input, { ...style?.input }]}
+          value={state.search}
+          onChange={e => dispatch(setSearch(e.nativeEvent.text))}
+          onFocus={() => dispatch(toggle())}
+        />
+      </View>
+      <View onLayout={handleMaxHeight}>
+        {filteredValues.length !== 0 && (
+          <Picker
+            style={[localStyles.picker, { ...style?.picker }]}
+            selectedValue={selectedValue}
+            onValueChange={value => {
+              dispatch(setSearch(value.label));
+              onValueChange(value);
+            }}
+          >
+            {filteredValues.map((item, index: number) => (
+              <Picker.Item key={index} label={item.label} value={item} />
+            ))}
+          </Picker>
+        )}
+      </View>
+    </Animated.View>
   );
 }
