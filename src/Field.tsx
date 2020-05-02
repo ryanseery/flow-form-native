@@ -5,16 +5,16 @@ import { toCamelCase } from './utils';
 import { ViewStyleProps } from './@types/view';
 import { TextProps } from './@types/text';
 
-interface InputStyles {
+interface FieldStyles {
   container?: ViewStyleProps;
   label?: TextProps;
-  input?: {};
+  field?: {};
   error?: TextProps;
 }
 
-interface IInput {
+type FieldProps = {
   children: string;
-  style?: InputStyles;
+  style?: FieldStyles;
   validate?: (text: string) => boolean;
   required?: boolean;
   placeholder?: string;
@@ -23,7 +23,7 @@ interface IInput {
   multiline?: boolean;
   maxLength?: number;
   numberOfLines?: number;
-}
+};
 
 const localStyles = StyleSheet.create({
   container: {
@@ -36,7 +36,7 @@ const localStyles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 6,
   },
-  input: {
+  field: {
     alignSelf: 'stretch',
     height: 40,
     borderColor: 'gray',
@@ -48,7 +48,7 @@ const localStyles = StyleSheet.create({
   },
 });
 
-export function Input({
+export function Field({
   children,
   validate,
   required,
@@ -59,7 +59,7 @@ export function Input({
   multiline,
   maxLength,
   numberOfLines,
-}: IInput): React.ReactElement {
+}: FieldProps): React.ReactElement {
   const id = toCamelCase(children);
 
   const { value, error, handleChange, handleBlur, handleFocus } = useFormData({
@@ -73,7 +73,7 @@ export function Input({
     <View style={[localStyles.container, { ...style?.container }]}>
       <Text style={[localStyles.label, { ...style?.label }]}>{children}</Text>
       <TextInput
-        style={[localStyles.input, { ...style?.input }]}
+        style={[localStyles.field, { ...style?.field }]}
         onChangeText={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
